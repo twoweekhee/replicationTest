@@ -23,7 +23,7 @@ public class DatasourceConfig {
     @Bean
     @Qualifier(SOURCE_SERVER)
     @ConfigurationProperties("spring.datasource.source")
-    public DataSource masterDataSource() {
+    public DataSource sourceDataSource() {
         log.info("source register");
         return DataSourceBuilder.create().build();
     }
@@ -37,17 +37,17 @@ public class DatasourceConfig {
     }
 
     @Bean
-    public DataSource routingDataSource(@Qualifier(SOURCE_SERVER) DataSource masterDataSource,
-                                        @Qualifier(REPLICA_SERVER) DataSource slaveDataSource) {
+    public DataSource routingDataSource(@Qualifier(SOURCE_SERVER) DataSource sourceDataSource,
+                                        @Qualifier(REPLICA_SERVER) DataSource replicaDataSource) {
 
         RoutingDataSource routingDataSource = new RoutingDataSource();
 
         HashMap<Object, Object> dataSourceMap = new HashMap<>();
-        dataSourceMap.put(SOURCE_SERVER, masterDataSource);
-        dataSourceMap.put(REPLICA_SERVER, slaveDataSource);
+        dataSourceMap.put(SOURCE_SERVER, sourceDataSource);
+        dataSourceMap.put(REPLICA_SERVER, replicaDataSource);
 
         routingDataSource.setTargetDataSources(dataSourceMap);
-        routingDataSource.setDefaultTargetDataSource(masterDataSource);
+        routingDataSource.setDefaultTargetDataSource(sourceDataSource);
 
         return routingDataSource;
     }
@@ -55,7 +55,7 @@ public class DatasourceConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        DataSource determinedDataSource = routingDataSource(masterDataSource(), replicaDataSource());
+        DataSource determinedDataSource = routingDataSource(sourceDataSource(), replicaDataSource());
         return new LazyConnectionDataSourceProxy(determinedDataSource);
     }
 }

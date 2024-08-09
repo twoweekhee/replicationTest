@@ -1,5 +1,7 @@
 package com.test.replicationtest.oauth.info;
 
+import java.util.Map;
+
 public interface OAuth2UserInfo {
 
     String getProvider();
@@ -7,4 +9,5 @@ public interface OAuth2UserInfo {
     String getName();
     String getEmail();
 
+    Map<String, Object> getAttributes();
 }

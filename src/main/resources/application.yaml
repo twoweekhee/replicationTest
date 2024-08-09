@@ -2,14 +2,15 @@ spring:
   datasource:
     source:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: "jdbc:mysql://172.17.0.2:3306/test?serverTimezone=asia/Seoul"
-      username: replication_user
+      jdbc-url: jdbc:mysql://0.0.0.0:3307/test?autoReconnect=true
+      username: root
       password: 1234
     replica:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: "jdbc:mysql://172.17.0.3:3306/test?serverTimezone=asia/Seoul"
-      username: replication_user
+      jdbc-url: jdbc:mysql://0.0.0.0:3308/test?autoReconnect=true
+      username: root
       password: 1234
+
 
   jpa:
     hibernate:
@@ -20,12 +21,12 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
 
-    main:
-      allow-bean-definition-overriding: true
-
-
   profiles:
     include: oauth
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 logging:
   level:
