@@ -1,29 +1,20 @@
 package com.test.replicationtest.member;
 
+import com.test.replicationtest.global.data.Replica;
+import com.test.replicationtest.global.data.Source;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final EntityManager entityManager;
 
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
-    public String getTest() {
-        memberRepository.save(new Member());
-        return "test";
-    }
-
-    @Transactional(readOnly = true)
-    public String getTestReadOnly(){
-        memberRepository.findById(1L);
-        return "test";
-    }
-
-    @Transactional
+    @Source
     public Member saveMember(MemberDto userRegistrationRequest) {
         Member member = Member.builder()
                 .name(userRegistrationRequest.getName())
@@ -45,5 +36,12 @@ public class MemberService {
         } else {
             throw new IllegalArgumentException("Invalid role: " + role);
         }
+    }
+
+    @Replica
+    public Member findByEmail(String email) {
+        entityManager.clear();
+
+        return memberRepository.findByEmail(email);
     }
 }

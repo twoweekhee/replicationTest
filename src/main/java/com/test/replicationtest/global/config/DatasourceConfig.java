@@ -1,6 +1,8 @@
 package com.test.replicationtest.global.config;
 
-import com.test.replicationtest.global.RoutingDataSource;
+import com.test.replicationtest.global.data.DataSourceContextHolder;
+import com.test.replicationtest.global.data.RoutingDataSource;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,7 +26,6 @@ public class DatasourceConfig {
     @Qualifier(SOURCE_SERVER)
     @ConfigurationProperties("spring.datasource.source")
     public DataSource sourceDataSource() {
-        log.info("source register");
         return DataSourceBuilder.create().build();
     }
 
@@ -32,7 +33,6 @@ public class DatasourceConfig {
     @Qualifier(REPLICA_SERVER)
     @ConfigurationProperties("spring.datasource.replica")
     public DataSource replicaDataSource() {
-        log.info("replica register");
         return DataSourceBuilder.create().build();
     }
 
@@ -57,5 +57,10 @@ public class DatasourceConfig {
     public DataSource dataSource() {
         DataSource determinedDataSource = routingDataSource(sourceDataSource(), replicaDataSource());
         return new LazyConnectionDataSourceProxy(determinedDataSource);
+    }
+
+    @PostConstruct
+    public void init() {
+        DataSourceContextHolder.setDataSourceType("source");
     }
 }

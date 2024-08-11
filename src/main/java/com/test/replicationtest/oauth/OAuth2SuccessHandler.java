@@ -2,7 +2,7 @@ package com.test.replicationtest.oauth;
 
 import com.test.replicationtest.jwt.JwtProvider;
 import com.test.replicationtest.member.Member;
-import com.test.replicationtest.member.MemberRepository;
+import com.test.replicationtest.member.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtProvider jwtProvider;
     private static final String URI = "http://localhost:3000/";
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response
@@ -53,7 +53,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             email = attributes.get("email").toString();
         }
 
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberService.findByEmail(email);
 
         String redirectUrl;
 

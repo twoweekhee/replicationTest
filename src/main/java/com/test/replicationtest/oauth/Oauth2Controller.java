@@ -1,7 +1,9 @@
 package com.test.replicationtest.oauth;
 
 import com.test.replicationtest.global.RedisUtil;
-import com.test.replicationtest.member.*;
+import com.test.replicationtest.member.Member;
+import com.test.replicationtest.member.MemberDto;
+import com.test.replicationtest.member.MemberService;
 import com.test.replicationtest.oauth.info.OAuth2UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class Oauth2Controller {
 
     private final RedisUtil redisUtil;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
-
-    @GetMapping("/oauth-login")
-    public String index() {
-        log.info("Success");
-        return "Success";
-    }
 
     @GetMapping("/oauth-join/user")
     public MemberDto getSessionUser() {

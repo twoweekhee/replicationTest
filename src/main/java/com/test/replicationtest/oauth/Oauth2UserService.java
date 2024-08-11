@@ -2,7 +2,7 @@ package com.test.replicationtest.oauth;
 
 import com.test.replicationtest.global.RedisUtil;
 import com.test.replicationtest.member.Member;
-import com.test.replicationtest.member.MemberRepository;
+import com.test.replicationtest.member.MemberService;
 import com.test.replicationtest.oauth.info.GoogleUserInfo;
 import com.test.replicationtest.oauth.info.KaKaoUserInfo;
 import com.test.replicationtest.oauth.info.NaverUserInfo;
@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 
@@ -23,12 +22,11 @@ import java.time.Duration;
 @Slf4j
 public class Oauth2UserService extends DefaultOAuth2UserService {
 
-    private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
+    private final MemberService memberService;
 
 
     @Override
-    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
@@ -50,7 +48,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
         }
 
         String email = oAuth2UserInfo.getEmail();
-        Member findMember = findMemberByEmail(email);
+        Member findMember = memberService.findByEmail(email);
 
         if (findMember == null) {
             redisUtil.setData("oauth2UserInfo", oAuth2UserInfo, Duration.ofMinutes(10));
@@ -61,8 +59,4 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
     }
 
-
-    private Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
-    }
 }
