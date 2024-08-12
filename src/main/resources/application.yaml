@@ -28,6 +28,21 @@ spring:
       host: localhost
       port: 6379
 
+
+  application:
+    name: replicationTest
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+    consumer:
+      bootstrap-servers: localhost:9092
+      auto-offset-reset: earliest
+      group-id: consumer_group01
+
+topic:
+  name: test-topic
+
 logging:
   level:
     org.hibernate.SQL: debug
