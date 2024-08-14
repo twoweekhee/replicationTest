@@ -5,9 +5,11 @@ import com.test.replicationtest.member.Member;
 import com.test.replicationtest.member.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -25,15 +27,15 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final JwtProvider jwtProvider;
     private static final String URI = "http://localhost:3000/";
     private final MemberService memberService;
+    private final Oauth2UserService oauth2UserService;
+    private final HttpSession session;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response
             , Authentication authentication) throws IOException {
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         // accessToken, refreshToken 발급
-        String accessToken = jwtProvider.generateAccessToken(authentication);
-        jwtProvider.generateRefreshToken(authentication);
-
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = authToken.getPrincipal();
 
@@ -61,10 +63,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             redirectUrl = UriComponentsBuilder.fromUriString(URI)
                     .path("oauth-login/join")
                     .build().toUriString();
+            oauth2UserService.saveToken(authentication, email);
         } else {
             redirectUrl = UriComponentsBuilder.fromUriString(URI)
                     .path(member.getRole() + "/oauth-login/success")
                     .build().toUriString();
+            oauth2UserService.saveToken(authentication, email);
         }
 
         response.sendRedirect(redirectUrl);

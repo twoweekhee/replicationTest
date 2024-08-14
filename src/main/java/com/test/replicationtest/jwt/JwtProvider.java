@@ -46,7 +46,7 @@ public class JwtProvider {
         return generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
     }
 
-    public String generateToken(Authentication authentication, Long expireTime) {
+    private String generateToken(Authentication authentication, Long expireTime) {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + expireTime);
 
@@ -102,6 +102,11 @@ public class JwtProvider {
         }
         Claims claims = parseClamis(token);
         return claims.getExpiration().after(new Date());
+    }
+
+    public String getRole(String token) {
+        Claims claims = parseClamis(token);
+        return (String) claims.get(KEY_ROLE);
     }
 
     private Claims parseClamis(String token) {

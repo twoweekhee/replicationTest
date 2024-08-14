@@ -14,7 +14,7 @@ public class WaitingController {
     private final EventScheduler eventScheduler;
 
     @GetMapping("/check/waiting")
-    public boolean isWaiting() {
+    public boolean isEmpty() {
         log.info("result : {}", waitingService.isEmpty());
         return waitingService.isEmpty();
     }
