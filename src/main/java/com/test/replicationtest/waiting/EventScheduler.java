@@ -18,14 +18,11 @@ public class EventScheduler {
     private final WaitingService waitingService;
 
     @Async
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 3000)
     public void waitingEventScheduler() {
         if (waitingService.isEmpty()) {
-            log.info("========= 대기열이 없습니다 =====");
             return;
         }
         waitingService.getIn();
-        waitingService.getOrder();
-
     }
 }

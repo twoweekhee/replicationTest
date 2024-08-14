@@ -24,23 +24,25 @@ public class WaitingService {
         this.zSetOps = redisTemplate.opsForZSet();  // RedisTemplate을 통해 ZSetOperations를 가져옴
     }
 
-    public void addWaitingQueue(){
+    public String addWaitingQueue(){
         final String thread = Thread.currentThread().getName();
         final long now = System.currentTimeMillis();
 
         redisTemplate.opsForZSet().add("waiting", thread, (int) now);
         log.info("대기열에 추가 - {} ({}초)", thread, now);
+        return thread;
     }
 
     public Long getOrder(){
         final long start = FIRST_ELEMENT;
         final long end = LAST_ELEMENT;
-
         final String thread = Thread.currentThread().getName();
         Long rank = redisTemplate.opsForZSet().rank("waiting", thread);
-        log.info("'{}'님의 현재 대기열은 {}명 남았습니다.", thread, rank);
-
-        return rank;
+        if (rank == null) {
+            return 0L;
+        } else {
+            return rank;
+        }
     }
 
     public void getIn() {

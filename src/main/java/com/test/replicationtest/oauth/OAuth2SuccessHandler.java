@@ -66,7 +66,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             oauth2UserService.saveToken(authentication, email);
         } else {
             redirectUrl = UriComponentsBuilder.fromUriString(URI)
-                    .path(member.getRole() + "/oauth-login/success")
+                    .path(member.getRole().getName() + "/oauth-login/success")
                     .build().toUriString();
             oauth2UserService.saveToken(authentication, email);
         }

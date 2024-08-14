@@ -7,7 +7,6 @@ import com.test.replicationtest.member.MemberDto;
 import com.test.replicationtest.member.MemberService;
 import com.test.replicationtest.oauth.info.OAuth2UserInfo;
 import com.test.replicationtest.oauth.info.OauthResponseDto;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,27 +22,26 @@ public class Oauth2Controller {
     private final RedisUtil redisUtil;
     private final MemberService memberService;
     private final JwtProvider jwtProvider;
-    private final HttpSession httpSession;
 
     @GetMapping("/oauth-join/user")
-    public MemberDto getSessionUser() {
+    public ResponseEntity<MemberDto> getSessionUser() {
 
         OAuth2UserInfo oAuth2UserInfo = (OAuth2UserInfo) redisUtil.getData("oauth2UserInfo");
 
-        return MemberDto.builder()
+        return ResponseEntity.ok(MemberDto.builder()
                 .name(oAuth2UserInfo.getName())
                 .email(oAuth2UserInfo.getEmail())
                 .provider(oAuth2UserInfo.getProvider())
                 .providerId(oAuth2UserInfo.getProviderId())
-                .build();
+                .build());
     }
 
     @PostMapping("/oauth-join/user")
-    public Member saveUser(@RequestBody MemberDto memberDto) {
+    public ResponseEntity<Member> saveUser(@RequestBody MemberDto memberDto) {
 
         Member member = memberService.saveMember(memberDto);
 
-        return member;
+        return ResponseEntity.ok(member);
     }
 
     @GetMapping("/check")
