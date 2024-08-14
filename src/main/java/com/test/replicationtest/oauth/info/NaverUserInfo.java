@@ -1,7 +1,15 @@
 package com.test.replicationtest.oauth.info;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.NoArgsConstructor;
+
 import java.util.Map;
 
+@NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NaverUserInfo implements OAuth2UserInfo {
     private Map<String, Object> attributes;
 
@@ -23,6 +31,12 @@ public class NaverUserInfo implements OAuth2UserInfo {
     public String getEmail() {
         return (String) ((Map) attributes.get("response")).get("email");
     }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
 
     @Override
     public String getName() {

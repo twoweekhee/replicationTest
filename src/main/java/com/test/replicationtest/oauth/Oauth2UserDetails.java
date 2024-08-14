@@ -1,6 +1,7 @@
 package com.test.replicationtest.oauth;
 
 import com.test.replicationtest.member.Member;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,12 +11,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
+public class Oauth2UserDetails implements UserDetails, OAuth2User {
 
+    @Getter
     private final Member member;
     private final Map<String, Object> attributes;
 
-    public CustomOauth2UserDetails(Member member, Map<String, Object> attributes) {
+    public Oauth2UserDetails(Member member, Map<String, Object> attributes) {
         this.member = member;
         this.attributes = attributes;
     }
@@ -44,6 +46,7 @@ public class CustomOauth2UserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return null;
+        return member.getName();
     }
+
 }
