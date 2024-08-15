@@ -42,7 +42,7 @@
 
 [[Docker 이용 Mysql (8이상)] 💾 DB Replication 구축 <Source, Replica>](https://velog.io/@twoweekhee/Docker-이용-Mysql-8이상-DB-Replication-구축-Source-Replica)
 
-[👾DB replication 오류 잡기] (https://velog.io/@twoweekhee/DB-replication-%EC%98%A4%EB%A5%98-%EC%9E%A1%EA%B8%B0)
+[👾DB replication 오류 잡기](https://velog.io/@twoweekhee/DB-replication-%EC%98%A4%EB%A5%98-%EC%9E%A1%EA%B8%B0)
 
 
 ### 프론트 페이지 + kafka consumer application
