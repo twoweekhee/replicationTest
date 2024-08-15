@@ -33,5 +33,23 @@
 - 카프카 이용한 알림
 - SSE 푸쉬
 - 스웨거
+  
+![스크린샷 2024-08-14 오후 3 30 03](https://github.com/user-attachments/assets/cf14c037-65bd-4a36-86ab-f472dd16f887)
+
+### velog
+
+[로컬에서 NginX - RoadBalancing 테스트 해보기 & 인텔리제이 & 스트링부트](https://velog.io/@twoweekhee/감자도-이해하는-로컬에서-NginX-RoadBalancing-테스트-해보기)
+
+[[Docker 이용 Mysql (8이상)] 💾 DB Replication 구축 <Source, Replica>](https://velog.io/@twoweekhee/Docker-이용-Mysql-8이상-DB-Replication-구축-Source-Replica)
+
+[👾DB replication 오류 잡기] (https://velog.io/@twoweekhee/DB-replication-%EC%98%A4%EB%A5%98-%EC%9E%A1%EA%B8%B0)
+
+
+### 프론트 페이지 + kafka consumer application
+- 프론트는 잘 못해서 구조가 깨끗하지 않을 수 있습니다.
+https://github.com/twoweekhee/kafkaTest
+https://github.com/twoweekhee/kafkaTestConsumerFe
+https://github.com/twoweekhee/ReplicationTestFe
+
 
 
