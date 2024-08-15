@@ -46,10 +46,10 @@
 
 
 ### 프론트 페이지 + kafka consumer application
-- 프론트는 잘 못해서 구조가 깨끗하지 않을 수 있습니다.
-https://github.com/twoweekhee/kafkaTest
-https://github.com/twoweekhee/kafkaTestConsumerFe
-https://github.com/twoweekhee/ReplicationTestFe
+프론트는 잘 못해서 구조가 깨끗하지 않을 수 있습니다.
+- https://github.com/twoweekhee/kafkaTest
+- https://github.com/twoweekhee/kafkaTestConsumerFe
+- https://github.com/twoweekhee/ReplicationTestFe
 
 
 
