@@ -1,6 +1,5 @@
 package com.test.replicationtest.jwt;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,11 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-@Entity
+import java.io.Serializable;
+
+
 @Getter
 @RedisHash(value = "token", timeToLive = 60 * 60 * 24 * 7)
 @RequiredArgsConstructor
-public class JwtRedis {
+public class RefreshToken implements Serializable {
 
     @Id
     private String id;
@@ -22,9 +23,13 @@ public class JwtRedis {
     private String refreshToken;
 
     @Builder
-    public JwtRedis(String id, String accessToken, String refreshToken) {
+    public RefreshToken(String id, String accessToken, String refreshToken) {
         this.id = id;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+    }
+
+    public void updateAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

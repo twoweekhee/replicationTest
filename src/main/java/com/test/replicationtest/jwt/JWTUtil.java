@@ -41,4 +41,17 @@ public class JWTUtil {
                 .compact();
     }
 
+    public String createAccessToken(String userName, String role){
+
+        return Jwts.builder()
+                .claim("userName", userName)
+                .claim("role", role)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60L * 30L))
+                .signWith(secretKey)
+                .compact();
+    }
+
+
+
 }
