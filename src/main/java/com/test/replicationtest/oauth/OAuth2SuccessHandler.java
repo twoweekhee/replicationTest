@@ -43,10 +43,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(userName, role, EXPIRED_MS);
+        String access = jwtUtil.createJwt("access", userName, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", userName, role, 86400000L);
 
-       response.addCookie(createCookie("Authorization", token));
-       response.sendRedirect(URI);
+        response.setHeader("access", access);
+        response.addCookie(createCookie("refresh", refresh));
+        response.sendRedirect(URI);
     }
 
     private Cookie createCookie(String name, String value) {

@@ -2,9 +2,9 @@ package com.test.replicationtest.jwt;
 
 import com.test.replicationtest.member.MemberDto;
 import com.test.replicationtest.oauth.CustomoAuth2User;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,33 +25,44 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorization = null;
+        String accessToken = request.getHeader("access");
 
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            log.info(cookie.getName() + " : " + cookie.getValue());
-            if (cookie.getName().equals("Authorization")) {
-                authorization = cookie.getValue();
-            }
-        }
-
-        if (authorization == null) {
+        if (accessToken == null) {
             log.info("token null");
             filterChain.doFilter(request, response);
 
             return;
         }
 
-        String token = authorization;
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e) {
 
-        if (jwtUtil.isExpired(token)) {
-            log.info("token expired");
-            filterChain.doFilter(request, response);
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
+
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        String userName = jwtUtil.getUserName(token);
-        String role = jwtUtil.getRole(token);
+        // 토큰이 access인지 확인 (발급시 페이로드에 명시)
+        String tokenName = jwtUtil.getTokenName(accessToken);
+
+        if (!tokenName.equals("access")) {
+
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        String userName = jwtUtil.getUserName(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
         CustomoAuth2User customoAuth2User = new CustomoAuth2User(MemberDto.builder()
                 .role(role)

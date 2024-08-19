@@ -18,6 +18,10 @@ public class JWTUtil {
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
+    public String getTokenName(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("tokenName", String.class);
+    }
+
     public String getUserName(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userName", String.class);
     }
@@ -30,9 +34,10 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String userName, String role, Long expiredMs){
+    public String createJwt(String tokenName, String userName, String role, Long expiredMs){
 
         return Jwts.builder()
+                .claim("tokenName", tokenName)
                 .claim("userName", userName)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -40,18 +45,6 @@ public class JWTUtil {
                 .signWith(secretKey)
                 .compact();
     }
-
-    public String createAccessToken(String userName, String role){
-
-        return Jwts.builder()
-                .claim("userName", userName)
-                .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000L * 60L * 30L))
-                .signWith(secretKey)
-                .compact();
-    }
-
 
 
 }
