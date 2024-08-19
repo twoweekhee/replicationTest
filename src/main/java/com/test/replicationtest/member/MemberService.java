@@ -15,13 +15,12 @@ public class MemberService {
 
 
     @Source
-    public Member saveMember(MemberDto userRegistrationRequest) {
+    public Member saveMember(MemberDto memberDto) {
         Member member = Member.builder()
-                .name(userRegistrationRequest.getName())
-                .email(userRegistrationRequest.getEmail())
-                .provider(userRegistrationRequest.getProvider())
-                .providerId(userRegistrationRequest.getProviderId())
-                .role(validateRole(userRegistrationRequest.getRole()))
+                .name(memberDto.getName())
+                .email(memberDto.getEmail())
+                .userName(memberDto.getUserName())
+                .role(validateRole(memberDto.getRole()))
                 .build();
         memberRepository.save(member);
 
@@ -43,5 +42,10 @@ public class MemberService {
         entityManager.clear();
 
         return memberRepository.findByEmail(email);
+    }
+
+    @Replica
+    public Member findByUserName(String userName) {
+        return memberRepository.findByUserName(userName);
     }
 }

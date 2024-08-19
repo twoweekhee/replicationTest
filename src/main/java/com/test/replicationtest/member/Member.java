@@ -16,25 +16,19 @@ public class Member implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String loginId;
-    private String password;
     private String name;
     private String email;
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
-    private String provider;
-    private String providerId;
+    private String userName;
 
     @Builder
-    public Member(String email, String loginId, String password, String name, MemberRole role, String provider, String providerId) {
+    public Member(String email, String userName, String name, MemberRole role) {
         this.email = email;
-        this.loginId = loginId;
-        this.password = password;
+        this.userName = userName;
         this.name = name;
         this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
     }
 }

@@ -8,15 +8,13 @@ public class MemberDto {
     private String name;
     private String email;
     private String role;
-    private String provider;
-    private String providerId;
+    private String userName;
 
     @Builder
-    public MemberDto( String name, String email, String role, String provider, String providerId) {
+    public MemberDto( String name, String email, String role, String userName) {
         this.name = name;
         this.email = email;
         this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
+        this.userName = userName;
     }
 }

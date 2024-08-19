@@ -14,7 +14,7 @@ public class KaKaoUserInfo implements OAuth2UserInfo{
     private Map<String, Object> attributes;
 
     public KaKaoUserInfo(Map<String, Object> attributes) {
-        this.attributes = attributes;
+        this.attributes = (Map<String, Object>) attributes.get("kakao_account");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class KaKaoUserInfo implements OAuth2UserInfo{
 
     @Override
     public String getEmail() {
-        return (String) ((Map) attributes.get("kakao_account")).get("email");
+        return attributes.get("email").toString();
     }
 
     @Override
