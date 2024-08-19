@@ -1,77 +1,64 @@
 package com.test.replicationtest.oauth;
 
-import com.test.replicationtest.jwt.JwtProvider;
-import com.test.replicationtest.member.Member;
+import com.test.replicationtest.jwt.JWTUtil;
 import com.test.replicationtest.member.MemberService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Iterator;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JwtProvider jwtProvider;
+    private final JWTUtil jwtUtil;
     private static final String URI = "http://localhost:3000/";
     private final MemberService memberService;
     private final Oauth2UserService oauth2UserService;
-    private final HttpSession session;
+
+    @Value("${jwt.expiredMS}")
+    private Long EXPIRED_MS;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response
             , Authentication authentication) throws IOException {
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        // accessToken, refreshToken 발급
-        OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
-        OAuth2User oAuth2User = authToken.getPrincipal();
+        CustomoAuth2User oAuth2User = (CustomoAuth2User) authentication.getPrincipal();
 
-        String provider = authToken.getAuthorizedClientRegistrationId();
+        String userName = oAuth2User.getUserName();
 
-        // 이메일로 사용자 조회
-        String email = "";
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority auth = iterator.next();
+        String role = auth.getAuthority();
 
-        if(provider.equals("google")){
-            email = oAuth2User.getAttribute("email");
-        }else if (provider.equals("naver")) {
-            Map<String, Object> attributes = oAuth2User.getAttribute("response");
-            email = attributes.get("email").toString();
-        }else if (provider.equals("kakao")) {
-            log.info("getAttributes Kakao : {}" , oAuth2User.getAttributes());
-            Map<String, Object> attributes = oAuth2User.getAttribute("kakao_account");
-            email = attributes.get("email").toString();
-        }
+        String access = jwtUtil.createJwt("access", userName, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", userName, role, 86400000L);
 
-        Member member = memberService.findByEmail(email);
+        response.setHeader("access", access);
+        response.addCookie(createCookie("refresh", refresh));
+        response.sendRedirect(URI);
+    }
 
-        String redirectUrl;
+    private Cookie createCookie(String name, String value) {
 
-        if (member == null) {
-            redirectUrl = UriComponentsBuilder.fromUriString(URI)
-                    .path("oauth-login/join")
-                    .build().toUriString();
-            oauth2UserService.saveToken(authentication, email);
-        } else {
-            redirectUrl = UriComponentsBuilder.fromUriString(URI)
-                    .path(member.getRole().getName() + "/oauth-login/success")
-                    .build().toUriString();
-            oauth2UserService.saveToken(authentication, email);
-        }
+        Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(EXPIRED_MS.intValue());
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
 
-        response.sendRedirect(redirectUrl);
+        return cookie;
     }
 
 }
