@@ -187,8 +187,6 @@ public class CounterController {
 
 그런 다음인텔리 제이 우측 상단 1시방향을 클릭
 
-!https://velog.velcdn.com/images/twoweekhee/post/0b79a12c-9a0a-4b8c-9220-79f1a81874b4/image.png
-
 edit Configuration 클릭
 
 옆에 복사 버튼 누르면 똑같은 어플리케이션이 하나 더 생긴다.
@@ -198,7 +196,7 @@ edit Configuration 클릭
 1. 첫번째 방법
 - Vm option 선택
 - Dserver.port=포트번호 (원하는 포트번호 입력)
-1. 
+   
 2. 두번째 방법
 - environment variable 선택
 - server.port=포트번호 (원하는 포트번호 입력)
