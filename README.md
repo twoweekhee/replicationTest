@@ -160,10 +160,6 @@ iq00
 
 ```
 
-!https://velog.velcdn.com/images/twoweekhee/post/bb20adab-405d-4412-904c-5d519d25f482/image.png
-
-위와 같은 그림처럼 되는 것이다!!
-
 그렇다면 이걸 테스트할 수 있는 방법을 설명하겠다!!
 
 ### 테스트 하는 법(인텔리제이)
@@ -197,8 +193,6 @@ edit Configuration 클릭
 
 옆에 복사 버튼 누르면 똑같은 어플리케이션이 하나 더 생긴다.
 
-!https://velog.velcdn.com/images/twoweekhee/post/7b062d54-f62f-4a12-8f4a-b79cb6a4a15c/image.png
-
 그다음 modify option을 누른다.
 
 1. 첫번째 방법
@@ -213,21 +207,10 @@ edit Configuration 클릭
 
 두개를 동시에 실행시켜 본다음
 
-!https://velog.velcdn.com/images/twoweekhee/post/2b3433b2-32c7-4bf6-8fc8-5b788ce9d014/image.png
-
-!https://velog.velcdn.com/images/twoweekhee/post/2d1f6a5a-12c4-4f34-a5e2-9e2035faa8fc/image.png
-
-!https://velog.velcdn.com/images/twoweekhee/post/1964d7d7-282b-43fb-8564-b471406478a2/image.png
-
-잘 실행 된다.
-
 localhost에 접속해보면 계속 새로고침 했을 때 포트 번호가 다르게
 
 화면에 띄워지는 것을 알 수 있다.
 
-!https://velog.velcdn.com/images/twoweekhee/post/9aabb8e1-3e1b-4f88-9a00-1b86848e39e5/image.png
-
-!https://velog.velcdn.com/images/twoweekhee/post/e225977f-94d5-465c-97af-62150266fd24/image.png
 
 ### velog
 
